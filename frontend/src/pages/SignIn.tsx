@@ -13,9 +13,12 @@ export default function SignIn() {
       display: 'flex',
     },
     blueSide: {
-      backgroundcolor: '#1DA1F2'
+      'background-color': '#1DA1F2',
+      flex: '0 0 50%',
     },
-    loginSide: {},
+    loginSide: {
+      flex: '0 0 50%',
+    },
   }));
   
 
@@ -37,7 +40,6 @@ export default function SignIn() {
         </ul>
       </section>
       <section className={classes.loginSide}>
-
       </section>
     </div>
   );
