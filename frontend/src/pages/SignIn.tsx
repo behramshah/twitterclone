@@ -33,8 +33,8 @@ export default function SignIn() {
       left: '50%',
       top: '53%',
       transform: 'translate(-50%, -50%)',
-      width: '350%',
-      height: '350%',
+      width: '260%',
+      height: '260%',
     },
     blueSideListInfo: {
       position: 'relative',
