@@ -70,6 +70,7 @@ export const Home = () => {
       marginLeft: -5,
     },
     sideMenuTweetButton: {
+      borderRadius: 45,
       padding: theme.spacing(3.2),
       marginTop: theme.spacing(2),
     },
@@ -143,7 +144,7 @@ export const Home = () => {
           </Paper>
         </Grid>
         <Grid item xs={3}>
-          <SearchTextField placeholder="Search tweet" fullWidth />
+          <SearchTextField sx={{padding: '10px'}} placeholder="Search tweet" fullWidth />
         </Grid>
       </Grid>
     </Container>
