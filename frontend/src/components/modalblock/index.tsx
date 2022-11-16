@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalBlockProps {
-  title: string;
+  title?: string;
   children: React.ReactNode;
   classes?: ReturnType<any>;
   visible?: boolean;
