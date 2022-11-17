@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Grid, Paper, Typography, InputAdornment, List, ListItem, ListItemAvatar, Button, ListItemText, Divider, Avatar, CircularProgress, TextareaAutosize, } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Container, Grid, Paper, Typography, List, ListItem, ListItemAvatar, Button, ListItemText, Divider, Avatar, CircularProgress } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { AddTweetForm } from '../../components/AddTweetForm';
 
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
@@ -9,6 +9,10 @@ import { makeStyles } from 'tss-react/mui';
 import { Tweet } from '../../components/Tweet';
 import { SideMenu } from '../../components/SideMenu';
 import { SearchTextField } from '../../components/SearchTextField';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTweets } from '../../store/ducks/tweets/actionCreators';
+import { selectIsTweetsLoading, selectTweetsItems } from '../../store/ducks/tweets/selectors';
+
 
 export const Home = () => {
 
@@ -208,6 +212,13 @@ export const Home = () => {
   }));
 
   const { classes } = useHomeStyles(theme);
+  const dispatch = useDispatch();
+  const tweets = useSelector(selectTweetsItems);
+  const isLoading = useSelector(selectIsTweetsLoading);
+
+  React.useEffect(() => {
+    dispatch(fetchTweets());
+  }, [dispatch]);
 
   return (
     <Container className={classes.wrapper} maxWidth="lg">
@@ -220,35 +231,28 @@ export const Home = () => {
             <Paper className={classes.tweetsHeader} variant="outlined">
               <Typography variant="h6">Home</Typography>
             </Paper>
-            {[
-              ...new Array(20).fill(
-                <Tweet
-                  text="Some tweet limitation text"
-                  user={{
-                    fullname: 'Glafira Zhur',
-                    username: 'GlafiraZhur',
-                    avatarUrl:
-                      'https://images.unsplash.com/photo-1528914457842-1af67b57139d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
-                  }}
-                  classes={classes}
-                />,
-              ),
-            ]}
+            <Paper>
+              <div className={classes.addForm}>
+                <AddTweetForm classes={classes} />
+              </div>
+              <div className={classes.addFormBottomLine} />
+            </Paper>
+            {isLoading ? (
+              <div className={classes.tweetsCentred}>
+                <CircularProgress />
+              </div>
+            ) : (
+              tweets.map((tweet) => (
+                <Tweet key={tweet._id} text={tweet.text} user={tweet.user} classes={classes} />
+              ))
+            )}
           </Paper>
         </Grid>
         <Grid sm={3} md={3} item>
           <div className={classes.rightSide}>
             <SearchTextField
-              //variant="outlined"
-              //placeholder="Поиск по Твиттеру"
-            //   InputProps={{
-            //     startAdornment: (
-            //       <InputAdornment position="start">
-            //         <SearchIcon />
-            //       </InputAdornment>
-            //     ),
-            //   }}
-            //   fullWidth
+              variant="outlined"
+              placeholder="Поиск по Твиттеру"
             />
             <Paper className={classes.rightSideBlock}>
               <Paper className={classes.rightSideBlockHeader} variant="outlined">
