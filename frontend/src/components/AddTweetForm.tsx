@@ -80,6 +80,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({
           <Button
             onClick={handleClickAddTweet}
             disabled={text.length >= MAX_LENGTH}
+            style={{borderRadius:'25px'}}
             color="primary"
             variant="contained">
             Tweet

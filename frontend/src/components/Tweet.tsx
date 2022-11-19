@@ -3,13 +3,15 @@ import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ShareIcon from '@mui/icons-material/Share';
+import { Link } from 'react-router-dom';
 
 import { Avatar, IconButton, Paper, Typography } from '@mui/material';
 
 
 interface TweetProps {
+    _id: string,
     text: string;
-    classes: any
+    classes: any;
     user: {
       fullname: string;
       username: string;
@@ -18,47 +20,48 @@ interface TweetProps {
   }
   
 
-export const Tweet: React.FC<TweetProps> = ({ text, user, classes }: TweetProps): React.ReactElement => {
+export const Tweet: React.FC<TweetProps> = ({ _id, text, user, classes }: TweetProps): React.ReactElement => {
   return (
-    <Paper className={classes.tweet}  variant="outlined">
-        <Avatar
-          className={classes.tweetAvatar}
-          alt={`User avatar ${user.fullname}`}
-          src={user.avatarUrl}
-        />
-      
-        <Typography>
-          <b>{user.fullname}</b>&nbsp;
-          <span className={classes.tweetUserName}>@{user.username}</span>&nbsp;
-          <span className={classes.tweetUserName}>·</span>&nbsp;
-          <span className={classes.tweetUserName}>1 h</span>
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          {text}
-        </Typography>
-        <div className={classes.tweetFooter}>
-          <div>
-            <IconButton>
-              <InsertCommentIcon style={{ fontSize: 20 }} />
-            </IconButton>
-            <span>1</span>
+    <Link className={classes.tweetWrapper} to={`/home/tweet/${_id}`}>    
+      <Paper className={classes.tweet}  variant="outlined">
+          <Avatar
+            className={classes.tweetAvatar}
+            alt={`User avatar ${user.fullname}`}
+            src={user.avatarUrl}
+          />        
+          <Typography>
+            <b>{user.fullname}</b>&nbsp;
+            <span className={classes.tweetUserName}>@{user.username}</span>&nbsp;
+            <span className={classes.tweetUserName}>·</span>&nbsp;
+            <span className={classes.tweetUserName}>1 h</span>
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {text}
+          </Typography>
+          <div className={classes.tweetFooter}>
+            <div>
+              <IconButton>
+                <InsertCommentIcon style={{ fontSize: 20 }} />
+              </IconButton>
+              <span>1</span>
+            </div>
+            <div>
+              <IconButton>
+                <ReplayIcon style={{ fontSize: 20 }} />
+              </IconButton>
+            </div>
+            <div>
+              <IconButton>
+                <ThumbUpAltIcon style={{ fontSize: 20 }} />
+              </IconButton>
+            </div>
+            <div>
+              <IconButton>
+                <ShareIcon style={{ fontSize: 20 }} />
+              </IconButton>
+            </div>
           </div>
-          <div>
-            <IconButton>
-              <ReplayIcon style={{ fontSize: 20 }} />
-            </IconButton>
-          </div>
-          <div>
-            <IconButton>
-              <ThumbUpAltIcon style={{ fontSize: 20 }} />
-            </IconButton>
-          </div>
-          <div>
-            <IconButton>
-              <ShareIcon style={{ fontSize: 20 }} />
-            </IconButton>
-          </div>
-        </div>
-  </Paper>
+    </Paper>
+  </Link>
   );
 }

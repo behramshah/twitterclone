@@ -13,6 +13,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTweets } from '../../store/ducks/tweets/actionCreators';
 import { selectIsTweetsLoading, selectTweetsItems } from '../../store/ducks/tweets/selectors';
 
+import { Tags } from '../../components/Tags';
+import { Route } from 'react-router-dom';
+import { BackButton } from '../../components/BackButton';
+import { FullTweet } from './components/FullTweet';
+import { fetchTags } from '../../store/ducks/tags/actionCreators';
+
 
 export const Home = () => {
 
@@ -82,6 +88,8 @@ export const Home = () => {
       borderBottom: '0',
     },
     tweetsHeader: {
+      display: 'flex',
+      alignItems: 'center',
       borderTop: '0',
       borderLeft: '0',
       borderRight: '0',
@@ -91,9 +99,14 @@ export const Home = () => {
         fontWeight: 800,
       },
     },
+    tweetsHeaderBackButton: {
+      marginRight: 20,
+    },
+  
     tweet: {
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'flex-start',
       cursor: 'pointer',
       paddingTop: 15,
       paddingLeft: 20,
@@ -109,10 +122,23 @@ export const Home = () => {
         backgroundColor: 'rgb(245, 248, 250)',
       },
     },
+    tweetWrapper: {
+      color: 'inherit',
+      textDecoration: 'none',
+    },
+  
     tweetAvatar: {
         width: theme.spacing(6.5),
         height: theme.spacing(6.5),
         marginRight: 15,
+        '&:hover': {
+          backgroundColor: '#edf3f6',
+        },
+        '& a': {
+          color: 'inherit',
+          textDecoration: 'none',
+        },
+    
     },
     tweetFooter: {
       display: 'flex',
@@ -218,6 +244,7 @@ export const Home = () => {
 
   React.useEffect(() => {
     dispatch(fetchTweets());
+    dispatch(fetchTags());
   }, [dispatch]);
 
   return (
@@ -229,71 +256,51 @@ export const Home = () => {
         <Grid item xs={6}>
           <Paper className={classes.tweetsWrapper} variant="outlined">
             <Paper className={classes.tweetsHeader} variant="outlined">
-              <Typography variant="h6">Home</Typography>
-            </Paper>
-            <Paper>
-              <div className={classes.addForm}>
-                <AddTweetForm classes={classes} />
-              </div>
-              <div className={classes.addFormBottomLine} />
-            </Paper>
-            {isLoading ? (
-              <div className={classes.tweetsCentred}>
-                <CircularProgress />
-              </div>
-            ) : (
-              tweets.map((tweet) => (
-                <Tweet key={tweet._id} text={tweet.text} user={tweet.user} classes={classes} />
-              ))
-            )}
+
+              <Route path="/home/:any">
+                <BackButton />
+              </Route>
+
+              <Route path={['/home', '/home/search']} exact>
+                <Typography variant="h6">Home</Typography>
+              </Route>
+
+              <Route path="/home/tweet">
+                <Typography variant="h6">Тweet</Typography>
+              </Route>
+          
+            </Paper>        
+
+            <Route path={['/home', '/home/search']} exact>
+              <Paper>
+                <div className={classes.addForm}>
+                  <AddTweetForm classes={classes} />
+                </div>
+                <div className={classes.addFormBottomLine} />
+              </Paper>
+            </Route>
+
+            <Route path="/home" exact>
+              {isLoading ? (
+                <div className={classes.tweetsCentred}>
+                  <CircularProgress />
+                </div>
+              ) : (
+                tweets.map((tweet) => <Tweet key={tweet._id} classes={classes} {...tweet} />)
+              )}
+            </Route>
+            
+            <Route path="/home/tweet/:id" component={FullTweet} exact />   
+
           </Paper>
         </Grid>
         <Grid sm={3} md={3} item>
           <div className={classes.rightSide}>
             <SearchTextField
               variant="outlined"
-              placeholder="Поиск по Твиттеру"
+              placeholder="Search in Twitter"
             />
-            <Paper className={classes.rightSideBlock}>
-              <Paper className={classes.rightSideBlockHeader} variant="outlined">
-                <b>Hot topics</b>
-              </Paper>
-              <List>
-                <ListItem className={classes.rightSideBlockItem}>
-                  <ListItemText
-                    primary="Bitcoin"
-                    secondary={
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        Tweets: 3 331
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider component="li" />
-                <ListItem className={classes.rightSideBlockItem}>
-                  <ListItemText
-                    primary="#ukrainwar"
-                    secondary={
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        Tweets: 163 122
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider component="li" />
-                <ListItem className={classes.rightSideBlockItem}>
-                  <ListItemText
-                    primary="Azerbaijan"
-                    secondary={
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        Tweets: 13 554
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider component="li" />
-              </List>
-            </Paper>
+            <Tags classes={classes} />
             <Paper className={classes.rightSideBlock}>
               <Paper className={classes.rightSideBlockHeader} variant="outlined">
                 <b>Recomended</b>
@@ -303,7 +310,7 @@ export const Home = () => {
                   <ListItemAvatar>
                     <Avatar
                       alt="Remy Sharp"
-                      src="https://pbs.twimg.com/profile_images/1267938486566428673/US6KRPbA_normal.jpg"
+                      src="https://source.unsplash.com/random/100x100?2"
                     />
                   </ListItemAvatar>
                   <ListItemText
