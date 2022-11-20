@@ -3,7 +3,7 @@ import { TagsApi } from '../../../services/api/tagsApi';
 import { setTags, setTagsLoadingState, TagsActionsType } from './actionCreators';
 import { LoadingState } from './contracts/state';
 
-export function* fetchTagsRequest() {
+export function* fetchTagsRequest(): Generator<any,any,any> {
   try {
     const items = yield call(TagsApi.fetchTags);
     yield put(setTags(items));

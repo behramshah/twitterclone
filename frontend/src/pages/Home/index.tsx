@@ -101,8 +101,7 @@ export const Home = () => {
     },
     tweetsHeaderBackButton: {
       marginRight: 20,
-    },
-  
+    },  
     tweet: {
       display: 'flex',
       flexDirection: 'column',
@@ -191,6 +190,10 @@ export const Home = () => {
             },
             '&:hover': {
               backgroundColor: '#edf3f6',
+            },
+            '& a': {
+              color: 'inherit',
+              textDecoration: 'none',
             },
           },
           addForm: {

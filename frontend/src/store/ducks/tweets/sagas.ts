@@ -3,7 +3,7 @@ import { TweetsApi } from '../../../services/api/tweetsApi';
 import { setTweets, setTweetsLoadingState, TweetsActionsType } from './actionCreators';
 import { LoadingState } from './contracts/state';
 
-export function* fetchTweetsRequest () {
+export function* fetchTweetsRequest ():Generator<any,any,any> {
   try {
     const items = yield call(TweetsApi.fetchTweets);
     yield put(setTweets(items));

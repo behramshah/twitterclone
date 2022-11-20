@@ -5,6 +5,5 @@ import { tweetSaga } from './ducks/tweet/sagas';
 
 
 export default function* rootSaga() {
-  yield all([tweetsSaga()]);
   yield all([tweetsSaga(), tagsSaga(), tweetSaga()]);
 }
