@@ -1,22 +1,19 @@
 import React from 'react';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Avatar, Paper, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Tweet } from '../../../components/Tweet';
 import { fetchTweetData, setTweetData } from '../../../store/ducks/tweet/actionCreators';
 import { selectIsTweetLoading, selectTweetData } from '../../../store/ducks/tweet/selectors';
 
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-export const FullTweet: React.FC = (): React.ReactElement | null => {
-  
+export const FullTweet: React.FC = (): React.ReactElement | null => {  
   const dispatch = useDispatch();
   const tweetData = useSelector(selectTweetData);
   const isLoading = useSelector(selectIsTweetLoading);
   const params: { id?: string } = useParams();
   const id = params.id;
-
   const theme = useTheme();
 
   const useTweetStyles = makeStyles<any>()((theme) => ({  
@@ -68,6 +65,19 @@ export const FullTweet: React.FC = (): React.ReactElement | null => {
       },
       tweetUserName: {
         color: '#9e9e9e',
+      },
+      tweetsHeaderUser: {
+        display: 'flex',
+        alignItems: 'center',
+      },
+      fullTweet: {
+        padding: 22,
+      },
+      fullTweetText: {
+        fontSize: 24,
+        marginTop: 20,
+        lineHeight: 1.3125,
+        wordBreak: 'break-word',
       },                 
   }));
 
@@ -77,7 +87,6 @@ export const FullTweet: React.FC = (): React.ReactElement | null => {
     if (id) {
       dispatch(fetchTweetData(id));
     }
-
     return () => {
       dispatch(setTweetData(undefined));
     };
@@ -92,7 +101,28 @@ export const FullTweet: React.FC = (): React.ReactElement | null => {
   }
 
   if (tweetData) {
-    return <Tweet classes={classes} {...tweetData} />;
+    return (
+      <Paper className={classes.fullTweet}>
+        <div className={classes.tweetsHeaderUser}>
+          <Avatar
+            className={classes.tweetAvatar}
+            alt={`User avatar ${tweetData.user.fullname}`}
+            src={tweetData.user.avatarUrl}
+          />
+          <Typography>
+            <b>{tweetData.user.fullname}</b>&nbsp;
+            <div>
+              <span className={classes.tweetUserName}>@{tweetData.user.username}</span>&nbsp;
+              <span className={classes.tweetUserName}>·</span>&nbsp;
+              <span className={classes.tweetUserName}>1 h</span>
+            </div>
+          </Typography>
+        </div>
+        <Typography className={classes.fullTweetText} gutterBottom>
+          {tweetData.text}
+        </Typography>
+      </Paper>
+    );
   }
 
   return null;

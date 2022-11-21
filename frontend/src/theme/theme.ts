@@ -39,7 +39,7 @@ export const theme = createTheme({
       disabled: '#fff',
     },
   },
-  shadows: [],
+  shadows: Array(25).fill('none'),
   overrides: {
     MuiButton: {
       root: {

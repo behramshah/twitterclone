@@ -89,6 +89,7 @@ export const Home = () => {
     },
     tweetsHeader: {
       display: 'flex',
+      flex: 1,
       alignItems: 'center',
       borderTop: '0',
       borderLeft: '0',
@@ -99,6 +100,19 @@ export const Home = () => {
         fontWeight: 800,
       },
     },
+    tweetsHeaderUser: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    fullTweet: {
+      padding: 22,
+    },
+    fullTweetText: {
+      fontSize: 24,
+      marginTop: 20,
+      lineHeight: 1.3125,
+      wordBreak: 'break-word',
+    }, 
     tweetsHeaderBackButton: {
       marginRight: 20,
     },  
@@ -124,8 +138,7 @@ export const Home = () => {
     tweetWrapper: {
       color: 'inherit',
       textDecoration: 'none',
-    },
-  
+    },  
     tweetAvatar: {
         width: theme.spacing(6.5),
         height: theme.spacing(6.5),
@@ -152,7 +165,7 @@ export const Home = () => {
     tweetsCentred: {
         marginTop: 50,
         textAlign: 'center',
-      },
+    },
     rightSide: {
         paddingTop: 20,
         position: 'sticky',

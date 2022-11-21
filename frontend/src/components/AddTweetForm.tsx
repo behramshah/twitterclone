@@ -1,7 +1,10 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAddTweet } from '../store/ducks/tweets/actionCreators';
+import { selectAddFormState } from '../store/ducks/tweets/selectors';
+import { AddFormState } from '../store/ducks/tweets/contracts/state';
 
-import { Button, IconButton, Avatar, CircularProgress, TextareaAutosize,  } from '@mui/material';
-
+import { Button, IconButton, Avatar, CircularProgress, TextareaAutosize, Alert } from '@mui/material';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 
@@ -16,7 +19,9 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({
   classes,
   maxRows,
 }: AddTweetFormProps): React.ReactElement => {
+  const dispatch = useDispatch();
   const [text, setText] = React.useState<string>('');
+  const addFormState = useSelector(selectAddFormState);
   const textLimitPercent = Math.round((text.length / 280) * 100);
   const textCount = MAX_LENGTH - text.length;
 
@@ -27,6 +32,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({
   };
 
   const handleClickAddTweet = (): void => {
+    dispatch(fetchAddTweet(text));
     setText('');
   };
 
@@ -36,7 +42,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({
         <Avatar
           className={classes.tweetAvatar}
           alt={`UserAvatar`}
-          src="https://pbs.twimg.com/profile_images/796061890451542016/J-O1AguD_bigger.jpg"
+          src="https://source.unsplash.com/random/100x100?3"
         />
         <TextareaAutosize
           onChange={handleChangeTextare}
@@ -55,7 +61,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({
             <SentimentSatisfiedIcon style={{ fontSize: 26 }} />
           </IconButton>
         </div>
-        <div className={classes.rightSideBlock.addFormBottomRight}>
+        <div className={classes.addFormBottomRight}>
           {text && (
             <>
               <span>{textCount}</span>
@@ -79,13 +85,26 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({
           )}
           <Button
             onClick={handleClickAddTweet}
-            disabled={text.length >= MAX_LENGTH}
+            disabled={addFormState === AddFormState.LOADING || !text || text.length >= MAX_LENGTH}
             style={{borderRadius:'25px'}}
             color="primary"
             variant="contained">
-            Tweet
+            {addFormState === AddFormState.LOADING ? (
+              <CircularProgress color="inherit" size={16} />
+            ) : (
+              'Tweet'
+            )}
+
           </Button>
         </div>
+        {addFormState === AddFormState.ERROR && (
+        <Alert severity="error">
+          Error on adding tweet
+          <span aria-label="emoji-sad" role="img">
+            😞
+          </span>
+        </Alert>
+        )}
       </div>
     </div>
   );
