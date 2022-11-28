@@ -173,7 +173,7 @@ export default function SignIn() {
                   type="password"
                   fullWidth
                 />
-                <Button onClick={handleCloseModal} variant="contained" color="primary" fullWidth>
+                <Button onClick={handleCloseModal} variant="contained" color='primary' fullWidth>
                   Log in
                 </Button>
               </FormGroup>
@@ -222,7 +222,7 @@ export default function SignIn() {
                   type="password"
                   fullWidth
                 />
-                <Button variant="contained" color="primary" fullWidth>
+                <Button variant="contained" color='primary' fullWidth>
                   Next
                 </Button>
               </FormGroup>

@@ -1,22 +1,21 @@
 import React from 'react';
-import { Paper, Typography, CircularProgress } from '@mui/material';
-import { AddTweetForm } from '../../components/AddTweetForm';
-
+import { Container, Grid, Button, Paper, Typography, ListItem, Divider, ListItemAvatar, Avatar, ListItemText, List } from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-import { Tweet } from '../../components/Tweet';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTweets } from '../../store/ducks/tweets/actionCreators';
-import { selectIsTweetsLoading, selectTweetsItems } from '../../store/ducks/tweets/selectors';
+import { SideMenu } from '../components/SideMenu';
+import { SearchTextField } from '../components/SearchTextField';
+import { useDispatch } from 'react-redux';
+import { fetchTweets } from '../store/ducks/tweets/actionCreators';
+import { Tags } from '../components/Tags';
+import { fetchTags } from '../store/ducks/tags/actionCreators';
 
-import { Route } from 'react-router-dom';
-import { BackButton } from '../../components/BackButton';
-import { FullTweet } from './components/FullTweet';
-import { fetchTags } from '../../store/ducks/tags/actionCreators';
+interface Layout {
+  children: React.ReactNode;
+}
 
-
-export const Home = () => {
+export const LayoutPage: React.FC<Layout> = ({ children }): React.ReactElement => {
 
   const theme = useTheme();
 
@@ -262,9 +261,8 @@ export const Home = () => {
   }));
 
   const { classes } = useHomeStyles(theme);
+  
   const dispatch = useDispatch();
-  const tweets = useSelector(selectTweetsItems);
-  const isLoading = useSelector(selectIsTweetsLoading);
 
   React.useEffect(() => {
     dispatch(fetchTweets());
@@ -272,42 +270,51 @@ export const Home = () => {
   }, [dispatch]);
 
   return (
-    <Paper className={classes.tweetsWrapper} variant="outlined">
-      <Paper className={classes.tweetsHeader} variant="outlined">
-        <Route path="/home/:any">
-          <BackButton />
-        </Route>
-
-        <Route path={['/home', '/home/search']} exact>
-          <Typography variant="h6">Tweets</Typography>
-        </Route>
-
-        <Route path="/home/tweet">
-          <Typography variant="h6">Tweet</Typography>
-        </Route>
-      </Paper>
-
-      <Route path={['/home', '/home/search']} exact>
-        <Paper>
-          <div className={classes.addForm}>
-            <AddTweetForm classes={classes} />
+    <Container className={classes.wrapper} maxWidth="lg">
+      <Grid container spacing={3}>
+        <Grid sm={1} md={3} item>
+          <SideMenu classes={classes} />
+        </Grid>
+        <Grid sm={8} md={6} item>
+          {children}
+        </Grid>
+        <Grid sm={3} md={3} item>
+          <div className={classes.rightSide}>
+            <SearchTextField
+              variant="outlined"
+              placeholder="Search in twitter"
+            />
+            <Tags classes={classes} />
+            <Paper className={classes.rightSideBlock}>
+              <Paper className={classes.rightSideBlockHeader} variant="outlined">
+                <b>Кого читать</b>
+              </Paper>
+              <List>
+                <ListItem className={classes.rightSideBlockItem}>
+                  <ListItemAvatar>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="https://source.unsplash.com/random/100x100?3"
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary="Dock Of Shame"
+                    secondary={
+                      <Typography component="span" variant="body2" color="textSecondary">
+                        @FavDockOfShame
+                      </Typography>
+                    }
+                  />
+                  <Button color="primary">
+                    <PersonAddIcon />
+                  </Button>
+                </ListItem>
+                <Divider component="li" />
+              </List>
+            </Paper>
           </div>
-          <div className={classes.addFormBottomLine} />
-        </Paper>
-      </Route>
-
-      <Route path="/home" exact>
-        {isLoading ? (
-          <div className={classes.tweetsCentred}>
-            <CircularProgress />
-          </div>
-        ) : (
-          tweets.map((tweet) => <Tweet key={tweet._id} classes={classes} {...tweet} />)
-        )}
-      </Route>
-
-      <Route path="/home/tweet/:id" component={FullTweet} exact />
-    </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
-
