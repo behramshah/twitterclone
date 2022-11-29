@@ -1,11 +1,11 @@
 import React from 'react';
-import { Container, Grid, Button, Paper, Typography, ListItem, Divider, ListItemAvatar, Avatar, ListItemText, List } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { Container, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { SideMenu } from '../components/SideMenu';
 import { SearchTextField } from '../components/SearchTextField';
+import { Users } from '../components/Users';
 import { useDispatch } from 'react-redux';
 import { fetchTweets } from '../store/ducks/tweets/actionCreators';
 import { Tags } from '../components/Tags';
@@ -285,33 +285,7 @@ export const LayoutPage: React.FC<Layout> = ({ children }): React.ReactElement =
               placeholder="Search in twitter"
             />
             <Tags classes={classes} />
-            <Paper className={classes.rightSideBlock}>
-              <Paper className={classes.rightSideBlockHeader} variant="outlined">
-                <b>Кого читать</b>
-              </Paper>
-              <List>
-                <ListItem className={classes.rightSideBlockItem}>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="https://source.unsplash.com/random/100x100?3"
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Dock Of Shame"
-                    secondary={
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        @FavDockOfShame
-                      </Typography>
-                    }
-                  />
-                  <Button color="primary">
-                    <PersonAddIcon />
-                  </Button>
-                </ListItem>
-                <Divider component="li" />
-              </List>
-            </Paper>
+            <Users/>
           </div>
         </Grid>
       </Grid>
