@@ -6,7 +6,6 @@ import SignIn from './pages/SignIn';
 import { LayoutPage } from './pages/Layout';
 import { Home } from './pages/Home';
 import { UserPage } from './pages/User';
-import { CssBaseline } from '@mui/material';
 import { fetchUserData } from './store/ducks/user/actionCreators';
 import { selectIsAuth, selectUserStatus } from './store/ducks/user/selectors';
 import { LoadingStatus } from './store/types';
@@ -36,6 +35,27 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuth, isReady]);
 
+  React.useEffect(() => {
+    const el = document.querySelector('#avatar');
+
+    if (el) {
+      el.addEventListener('change', () => {
+        const avatar = document.getElementById('avatar');
+        if (avatar) {
+          // @ts-ignore
+          let photo = avatar.files[0];
+          let req = new XMLHttpRequest();
+          let formData = new FormData();
+
+          formData.append('avatar', photo);
+          req.open('POST', '/upload');
+          req.send(formData);
+        }
+      });
+    }
+  }, []);
+
+
   if (!isReady) {
     return (
       <div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',}}>
@@ -46,7 +66,6 @@ function App() {
 
   return (
     <div className="App">
-      <CssBaseline/>
       <Switch>
       <Route path="/signin" component={SignIn} exact />
         <LayoutPage>

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { CssBaseline } from '@mui/material';
 
 
 import theme from './theme/theme';
@@ -17,6 +18,8 @@ const root = ReactDOM.createRoot(
 
 root.render( 
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
+      <input placeholder='' title='avatar' type="file" id="avatar" />
       <Router>
       <Provider store={store}>
           <App />
