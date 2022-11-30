@@ -6,9 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import * as yup from "yup";
 
 import { ModalBlock } from '../../../components/modalblock';
-import { Notification } from '../../../components/Notification';
 
-import { fetchSignIn, fetchSignUp } from '../../../store/ducks/user/actionCreators';
+import { fetchSignUp } from '../../../store/ducks/user/actionCreators';
 import { selectUserStatus } from '../../../store/ducks/user/selectors';
 import { LoadingStatus } from '../../../store/types';
 
@@ -36,7 +35,7 @@ const RegisterFormSchema = yup.object().shape({
 
 export const RegisterModal: React.FC<RegisterModalProps> = ({ open, onClose, classes }): React.ReactElement => {
   const dispatch = useDispatch();
-  const openNotificationRef = React.useRef<(text: string) => void>(() => { });
+  const openNotificationRef = React.useRef<(text: string) => void>(() => {});
   const loadingStatus = useSelector(selectUserStatus);
 
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormProps>({
@@ -54,142 +53,135 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ open, onClose, cla
     } else if (loadingStatus === LoadingStatus.ERROR) {
       openNotificationRef.current('Error in registration process!');
     }
-  }, [loadingStatus]);
+  }, [loadingStatus, onClose]);
 
-  return <Notification>
-    {
-      callback => {
-        openNotificationRef.current = callback;
-        return (
-          <ModalBlock
-            visible={open}
-            onClose={onClose}
-            classes={classes}
-            title="Войти в аккаунт">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl className={classes.loginFormControl} component="fieldset" fullWidth>
-                <FormGroup aria-label="position" row>
-                  <Controller
-                    control={control}
-                    name="email"
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         onChange={onChange}
-                         value={value}
-                         className={classes.registerField}
-                          id="email"
-                          label="E-Mail"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          variant="filled"
-                          type="email"
-                          defaultValue=""
-                          helperText={errors.email?.message}
-                          error={!!errors.email}
-                          fullWidth
-                          autoFocus
-                       />
-                   )}                    
+  return (
+    <ModalBlock visible={open} onClose={onClose} classes={classes} title="Войти в аккаунт">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl className={classes.loginFormControl} component="fieldset" fullWidth>
+          <FormGroup aria-label="position" row>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="email"
+                  label="E-Mail"
+                  className={classes.registerField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="email"
+                  defaultValue=""
+                  helperText={errors.email?.message}
+                  error={!!errors.email}
+                  fullWidth
+                  autoFocus
                   />
-                  <Controller
-                    control={control}
-                    name="username"
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         onChange={onChange}
-                         value={value}
-                         className={classes.registerField}
-                          id="username"
-                          label="Username"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          variant="filled"
-                          type="text"
-                          defaultValue=""
-                          helperText={errors.username?.message}
-                          error={!!errors.username}
-                          fullWidth
-                       />
-                   )}
-                    
+              )}
+            />
+            <Controller
+              control={control}
+              name="username"
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="username"
+                  label="Username"
+                  className={classes.registerField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="text"
+                  defaultValue=""
+                  helperText={errors.username?.message}
+                  error={!!errors.username}
+                  fullWidth
                   />
-                  <Controller
-                    control={control}
-                    name="fullname"
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         onChange={onChange}
-                         value={value}
-                         className={classes.registerField}
-                          id="fullname"
-                          label="Full name"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          variant="filled"
-                          type="text"
-                          defaultValue=""
-                          helperText={errors.fullname?.message}
-                          error={!!errors.fullname}
-                          fullWidth
-                       />
-                   )}                    
+              )}
+            />
+            <Controller
+              control={control}
+              name="fullname"
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="fullname"
+                  label="Your full name"
+                  className={classes.registerField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="text"
+                  defaultValue=""
+                  helperText={errors.fullname?.message}
+                  error={!!errors.fullname}
+                  fullWidth
                   />
-                  <Controller
-                    control={control}
-                    name="password"
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         onChange={onChange}
-                         value={value}
-                         className={classes.registerField}
-                        id="password"
-                        label="Password"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        variant="filled"
-                        type="password"
-                        defaultValue=""
-                        helperText={errors.password?.message}
-                        error={!!errors.password}
-                        fullWidth
-                       />
-                   )}
+              )}
+            />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="password"
+                  label="Password"
+                  className={classes.registerField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="password"
+                  defaultValue=""
+                  helperText={errors.password?.message}
+                  error={!!errors.password}
+                  fullWidth
                   />
-                  <Controller
-                    control={control}
-                    name="password2"
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         onChange={onChange}
-                         value={value}
-                         className={classes.registerField}
-                        id="password2"
-                        label="Repeat password"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        variant="filled"
-                        type="password"
-                        defaultValue=""
-                        helperText={errors.password2?.message}
-                        error={!!errors.password2}
-                        fullWidth
-                       />
-                   )}
+              )}
+            />
+            <Controller
+              control={control}
+              name="password2"
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="password2"
+                  label="Password"
+                  className={classes.registerField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="password"
+                  defaultValue=""
+                  helperText={errors.password2?.message}
+                  error={!!errors.password2}
+                  fullWidth
                   />
-                  <Button disabled={loadingStatus === LoadingStatus.LOADING} type="submit" variant="contained" color="primary" fullWidth>
-                    Register
-                  </Button>
-                </FormGroup>
-              </FormControl>
-            </form>
-          </ModalBlock>
-        )
-      }
-    }
-  </Notification>
+              )}
+            />
+            <Button
+              disabled={loadingStatus === LoadingStatus.LOADING}
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth>
+              Registration
+            </Button>
+          </FormGroup>
+        </FormControl>
+      </form>
+    </ModalBlock>
+  );
 }

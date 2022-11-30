@@ -38,7 +38,9 @@ export const Tweet: React.FC<TweetProps> = ({ _id, text, user, classes, createdA
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
     setAnchorEl(null);
   };
 
@@ -63,24 +65,12 @@ export const Tweet: React.FC<TweetProps> = ({ _id, text, user, classes, createdA
                 aria-label="more"
                 aria-controls="long-menu"
                 aria-haspopup="true"
-                onClick={handleClick}
-              >
+                onClick={handleClick}>
                 <MoreVertIcon />
               </IconButton>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={open}
-                onClose={handleClose}
-
-              >
-                <MenuItem onClick={handleClose}>
-                  Edit
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  Delete tweet
-                </MenuItem>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>Edit</MenuItem>
+                <MenuItem onClick={handleClose}>Delete tweet</MenuItem>
               </Menu>
             </div>
           </div>

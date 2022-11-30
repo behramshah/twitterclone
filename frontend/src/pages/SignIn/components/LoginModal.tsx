@@ -5,7 +5,6 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import * as yup from "yup";
 import { ModalBlock } from '../../../components/modalblock';
-import { Notification } from '../../../components/Notification';
 
 import { fetchSignIn } from '../../../store/ducks/user/actionCreators';
 import { selectUserStatus } from '../../../store/ducks/user/selectors';
@@ -30,7 +29,7 @@ const LoginFormSchema = yup.object().shape({
 
 export const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, classes }): React.ReactElement => {
   const dispatch = useDispatch();
-  const openNotificationRef = React.useRef<(text: string) => void>(() => { });
+  const openNotificationRef = React.useRef<(text: string) => void>(() => {});
   const loadingStatus = useSelector(selectUserStatus);
 
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormProps>({
@@ -48,75 +47,69 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, classes }
     } else if (loadingStatus === LoadingStatus.ERROR) {
       openNotificationRef.current('Incorrect mail or password');
     }
-  }, [loadingStatus]);
+  }, [loadingStatus, onClose]);
 
-  return <Notification>
-    {
-      callback => {
-        openNotificationRef.current = callback;
-        return (
-          <ModalBlock
-            visible={open}
-            onClose={onClose}
-            classes={classes}
-            title="Sign in">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl className={classes.loginFormControl} component="fieldset" fullWidth>
-                <FormGroup aria-label="position" row>
-                  <Controller
-                    control={control}
-                    name="email"               
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         id="email"
-                         className={classes.loginSideField}
-                         onChange={onChange}
-                         value={value}
-                         label="E-Mail"
-                         InputLabelProps={{
-                          shrink: true,
-                         }}
-                         variant="filled"
-                         type="email"
-                         defaultValue=""
-                         helperText={errors.email?.message}
-                         error={!!errors.email}
-                         fullWidth
-                         autoFocus
-                       />
-                   )}
+  return (
+    <ModalBlock visible={open} onClose={onClose} classes={classes} title="Log in">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl className={classes.loginFormControl} component="fieldset" fullWidth>
+          <FormGroup aria-label="position" row>
+            <Controller
+              control={control}
+              name="email"               
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="email"
+                  label="E-Mail"
+                  className={classes.loginSideField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="email"
+                  defaultValue=""
+                  helperText={errors.email?.message}
+                  error={!!errors.email}
+                  fullWidth
+                  autoFocus
                   />
-                  <Controller
-                    control={control}
-                    name="password"
-                    render={({ field: { onChange, value }}) => (
-                      <TextField
-                         onChange={onChange}
-                         value={value}
-                         className={classes.loginSideField}
-                          id="password"
-                          label="Password"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          variant="filled"
-                          type="password"
-                          defaultValue=""
-                          helperText={errors.password?.message}
-                          error={!!errors.password}
-                          fullWidth
-                       />
-                   )}
+              )}
+            />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value, }}) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  id="password"
+                  label="Password"
+                  className={classes.loginSideField}                 
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="password"
+                  defaultValue=""
+                  helperText={errors.password?.message}
+                  error={!!errors.password}
+                  fullWidth
                   />
-                  <Button disabled={loadingStatus === LoadingStatus.LOADING} type="submit" variant="contained" color="primary" fullWidth>
-                    Log in
-                  </Button>
-                </FormGroup>
-              </FormControl>
-            </form>
-          </ModalBlock>
-        )
-      }
-    }
-  </Notification>
+              )}
+            />
+            <Button
+              disabled={loadingStatus === LoadingStatus.LOADING}
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth>
+              Sign in
+            </Button>
+          </FormGroup>
+        </FormControl>
+      </form>
+    </ModalBlock>
+  );
 }

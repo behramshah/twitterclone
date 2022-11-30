@@ -1,3 +1,4 @@
+import TwitterIcon from '@mui/icons-material/Twitter';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -6,9 +7,10 @@ import { LayoutPage } from './pages/Layout';
 import { Home } from './pages/Home';
 import { UserPage } from './pages/User';
 import { CssBaseline } from '@mui/material';
-import { AuthApi } from './services/api/authApi';
-import { setUserData } from './store/ducks/user/actionCreators';
-import { selectIsAuth } from './store/ducks/user/selectors';
+import { fetchUserData } from './store/ducks/user/actionCreators';
+import { selectIsAuth, selectUserStatus } from './store/ducks/user/selectors';
+import { LoadingStatus } from './store/types';
+
 
 
 
@@ -17,26 +19,30 @@ function App() {
   const history = useHistory();
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
+  const loadingStatus = useSelector(selectUserStatus);
+  const isReady = loadingStatus !== LoadingStatus.NEVER && loadingStatus !== LoadingStatus.LOADING;
 
-  const checkAuth = async () => {
-    try {
-      const { data } = await AuthApi.getMe();
-      dispatch(setUserData(data));
-      // history.replace('/home');
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   React.useEffect(() => {
-    checkAuth();
-  }, []);
+    dispatch(fetchUserData());
+  }, [dispatch]);
 
   React.useEffect(() => {
-    if (isAuth) {
+    if (!isAuth && isReady) {
+      history.push('/signin');
+    } else {
       history.push('/home');
     }
-  }, [isAuth]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuth, isReady]);
+
+  if (!isReady) {
+    return (
+      <div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',}}>
+        <TwitterIcon color="primary" style={{ width: 80, height: 80 }} />
+      </div>
+    );
+  }
 
   return (
     <div className="App">
